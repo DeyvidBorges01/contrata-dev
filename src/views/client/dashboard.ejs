@@ -35,14 +35,9 @@
               </a>
             </li>
             <li>
-              <a href="profile">
-                <span>
-                  <iconify-icon
-                    icon="iconamoon:profile-bold"
-                    width="24"
-                  ></iconify-icon
-                ></span>
-                Perfil
+              <a href="/client/perfil" style="color:inherit; text-decoration:none; display:flex; gap:8px; align-items:center;">
+                <iconify-icon icon="iconamoon:profile-bold" width="24"></iconify-icon>
+                <span>Perfil</span>
               </a>
             </li>
           </ul>
@@ -53,7 +48,7 @@
       <main class="main-content">
         <div class="header">
           <h1>Suas Solicitações</h1>
-          <a href="create" class="btn-criar">
+          <a href="/client/create" class="btn-criar">
             <iconify-icon icon="ic:round-plus" width="20"></iconify-icon>Criar
             sua Solicitação
           </a>
@@ -63,8 +58,41 @@
           <div class="status">
             <h2>Em Produção</h2>
           </div>
-          <div id="cards-container" class="cards-container">
-            <span>[Por enquanto nenhum projeto para esse usuário]</span>
+          <div class="cards-container">
+            <% if (client && client.Projects && client.Projects.length) { %>
+              <% client.Projects.forEach(function(p){ %>
+                <a href="/solicitacao/<%= p.id %>" style="text-decoration: none; color: inherit;">
+                  <div class="card">
+                    <div class="header-card" style="position:relative;">
+                      <p class="valor"><%= p.budget ? ('R$ ' + p.budget) : 'Sem orçamento' %></p>
+                      <% if (p.deadline) { %>
+                        <p class="prazo">Prazo: <%= new Date(p.deadline).toLocaleDateString() %></p>
+                      <% } %>
+                    </div>
+                    <p class="titulo"><%= p.title %></p>
+                    <p><%= p.description ? p.description : '' %></p>
+                    <div class="tech-icons">
+                      <% if (typeof techIconMap !== 'undefined' && p.technologies) { %>
+                        <% p.technologies.split(',').filter(Boolean).forEach(function(t){ %>
+                          <% var iconName = techIconMap[t] || null; %>
+                          <% if (iconName) { %>
+                            <iconify-icon icon="<%= iconName %>" width="24" title="<%= t %>"></iconify-icon>
+                          <% } else { %>
+                            <span class="tech-chip"><%= t %></span>
+                          <% } %>
+                        <% }) %>
+                      <% } else if (p.technologies) { %>
+                        <% p.technologies.split(',').filter(Boolean).forEach(function(t){ %>
+                          <span class="tech-chip"><%= t %></span>
+                        <% }) %>
+                      <% } %>
+                    </div>
+                  </div>
+                </a>
+              <% }) %>
+            <% } else { %>
+              <p class="muted">Nenhuma solicitação criada ainda. Clique em "Criar sua Solicitação" para começar.</p>
+            <% } %>
           </div>
         </section>
       </main>

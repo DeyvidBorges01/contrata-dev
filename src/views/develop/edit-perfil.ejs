@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="/stylesheets/Perfil.css" />
+    <script src="https://code.iconify.design/iconify-icon/1.0.7/iconify-icon.min.js" await></script>
+    <title>Editar perfil - Contrata-Dev</title>
+  </head>
+  <body>
+    <div class="perfil-container">
+     <!-- Botão voltar -->
+      <div class="voltar">
+        <a class="voltar" href="/develop/perfil">
+        <iconify-icon icon="iconamoon:arrow-left-2" width="20"></iconify-icon>
+        Voltar
+        </a>
+      </div>
+
+      <div class="conteudo">
+        <div class="col-esquerda">
+          <div class="avatar big-avatar" id="avatarPreview">
+            <% if (developer && developer.avatar) { %>
+              <img src="<%= developer.avatar %>" alt="avatar" style="width:100%; height:100%; border-radius:50%; object-fit:cover;" />
+            <% } else { %>
+              <!-- default placeholder -->
+              <div style="width:100%; height:100%; border-radius:50%; background:#d9d9d9;"></div>
+            <% } %>
+          </div>
+
+          <!-- Avatar upload control -->
+          <div style="margin-top:12px; display:flex; gap:8px; align-items:center;">
+            <label for="avatarFile" class="add-link" style="cursor:pointer; padding:6px 10px;">alterar avatar</label>
+            <input id="avatarFile" name="avatar" type="file" accept="image/*" style="display:none;" />
+          </div>
+          <h1 class="profile-name"><%= developer && developer.User ? developer.User.name : 'Nome do Usuário' %></h1>
+
+          <div class="tecnologias large">
+            <p>Tecnologias</p>
+            <div id="techList" class="tech-icons">
+              <!-- client-side will render existing technology chips with remove buttons -->
+            </div>
+            <a id="addTech" href="#" class="add-link">adicionar tecnologia +</a>
+          </div>
+        </div>
+
+        <div class="col-direita right-top">
+          <div class="info-box top-box">
+            <div class="row-fields">
+              <div class="field">
+                <label>Email</label>
+                <input name="email" readonly value="<%= developer && developer.User ? developer.User.email : '' %>" />
+              </div>
+              <div class="field">
+                <label>Telefone</label>
+                <input name="phone" value="<%= developer ? developer.phone || '' : '' %>" />
+              </div>
+              <div class="field">
+                <label>País</label>
+                <input name="country" value="<%= developer ? developer.country || '' : '' %>" />
+              </div>
+            </div>
+          </div>
+
+          <div style="display:flex; justify-content:space-between; align-items:center;">
+            <div style="flex:1"></div>
+            <a id="addProjectBtn" href="#" class="add-link">adicionar projeto +</a>
+          </div>
+
+          <div id="projectsContainer">
+            <!-- client-side will render existing projects with remove buttons -->
+          </div>
+
+          <div class="actions">
+            <button id="cancelBtn" type="button" class="button outline">cancelar</button>
+            <button id="saveBtn" type="button" class="button primary">salvar</button>
+          </div>
+        </div>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      // expose the developer id and data to the client-side script
+      // use unescaped JSON output so the client receives valid JS objects
+      window.__DEVELOPER_ID = <%- JSON.stringify(developer ? developer.id : null) %>;
+      window.__DEVELOPER_DATA = <%- JSON.stringify(developer ? developer : null) %>;
+    </script>
+    <script src="/javascripts/developer-edit.js"></script>
+  </body>
+</html>
