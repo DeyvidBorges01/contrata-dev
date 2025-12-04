@@ -8,10 +8,13 @@ const Client = models.Client;
 
 export async function createProject(req, res, next) {
   try {
-    const { clientId, title, description, budget, deadline, status } = req.body;
+    const clientId = req.user?.dataValues.clientId;
 
-    const client = await Client.findByPk(clientId);
-    if (!client) return next(createError(404, "Cliente não encontrado"));
+    if (!clientId) {
+      return next(createError(401, "Cliente não autenticado"));
+    }
+
+    const { title, description, budget, deadline, status } = req.body;
 
     const project = await Project.create({
       clientId,
